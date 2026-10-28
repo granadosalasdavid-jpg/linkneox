@@ -1,0 +1,12 @@
+{
+  "name": "LinkNeox",
+  "short_name": "LinkNeox",
+  "description": "Generador de enlaces y QR de WhatsApp gratis.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8FAFC",
+  "theme_color": "#24529A",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
