@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Juegos gratis en el navegador | LinkNeox Gaming</title>
+  <meta name="description" content="Juegos gratis para jugar en el navegador, sin descargar nada: Sobreviviendo a la Isla (aventura 3D en el océano) y Eras de Imperio (estrategia en tiempo real)." />
+  <link rel="canonical" href="https://linkneox.com/gaming/" />
+  <meta name="theme-color" content="#0c1424" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="LinkNeox Gaming: juegos gratis en el navegador" />
+  <meta property="og:description" content="Aventura 3D en el océano y estrategia en tiempo real. Sin descargas, sin registro." />
+  <meta property="og:url" content="https://linkneox.com/gaming/" />
+  <meta property="og:image" content="https://linkneox.com/gaming/img/sobreviviendo-castillo.jpg" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <style>
+    :root {
+      --navy: #0c1424;
+      --navy-2: #131e35;
+      --card: #16233d;
+      --line: rgba(255, 255, 255, 0.09);
+      --text: #f4f5f1;
+      --muted: #a9b3c7;
+      --green: #3df5a6;
+      --violet: #7c5cff;
+      --grad: linear-gradient(135deg, #7c5cff, #3df5a6);
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0; min-height: 100vh; background: var(--navy); color: var(--text);
+      font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background-image: radial-gradient(60rem 30rem at 85% -10%, rgba(124, 92, 255, 0.22), transparent 60%),
+        radial-gradient(50rem 26rem at -10% 10%, rgba(61, 245, 166, 0.12), transparent 60%);
+    }
+    a { color: inherit; }
+    .wrap { width: min(1120px, 100% - 32px); margin-inline: auto; }
+
+    header { padding: 18px 0; border-bottom: 1px solid var(--line); }
+    header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; letter-spacing: -0.01em; }
+    .brand small { font-weight: 700; color: var(--green); }
+    .back { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600; }
+    .back:hover { color: var(--text); }
+
+    .hero { padding: 56px 0 28px; }
+    .tag { display: inline-block; padding: 4px 12px; border-radius: 999px; border: 1px solid rgba(61, 245, 166, 0.35); color: var(--green); font-size: 13px; font-weight: 700; }
+    h1 { margin: 14px 0 10px; font-size: clamp(32px, 6vw, 56px); line-height: 1.05; letter-spacing: -0.03em; }
+    h1 span { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero p { margin: 0; max-width: 620px; color: var(--muted); font-size: 18px; }
+
+    .games { display: grid; gap: 24px; padding: 20px 0 56px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); }
+    .game { display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; transition: transform 0.2s, border-color 0.2s; }
+    .game:hover { transform: translateY(-3px); border-color: rgba(61, 245, 166, 0.35); }
+    .shot { position: relative; aspect-ratio: 16 / 9; background: var(--navy-2); overflow: hidden; }
+    .shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .shot img.top { object-position: center top; }
+    .shot .mini { position: absolute; right: 12px; bottom: 12px; width: 34%; height: auto; aspect-ratio: 16 / 9; border-radius: 10px; border: 2px solid rgba(255, 255, 255, 0.85); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4); }
+    .body { display: flex; flex-direction: column; gap: 12px; padding: 22px 22px 24px; flex: 1; }
+    .game h2 { margin: 0; font-size: 26px; letter-spacing: -0.02em; }
+    .game .kind { color: var(--green); font-weight: 700; font-size: 14px; }
+    .game p { margin: 0; color: var(--muted); }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 2px 0 4px; padding: 0; list-style: none; }
+    .chips li { padding: 4px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); font-size: 13px; font-weight: 600; }
+    .play {
+      margin-top: auto; align-self: flex-start; display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 24px; border-radius: 14px; background: var(--grad); color: var(--navy);
+      font-weight: 800; font-size: 17px; text-decoration: none; transition: filter 0.2s, transform 0.2s;
+    }
+    .play:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .play:focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
+
+    .info { display: grid; gap: 16px; padding-bottom: 56px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+    .info div { padding: 18px; border-radius: 16px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--line); }
+    .info b { display: block; margin-bottom: 4px; }
+    .info span { color: var(--muted); font-size: 15px; }
+
+    footer { padding: 24px 0 36px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+    footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; }
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--text); }
+
+    @media (prefers-reduced-motion: reduce) { .game, .play { transition: none; } .game:hover, .play:hover { transform: none; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <a class="brand" href="/">
+        <svg width="32" height="32" viewBox="0 0 40 40" aria-hidden="true">
+          <defs><linearGradient id="g" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#7C5CFF" /><stop offset="1" stop-color="#3DF5A6" /></linearGradient></defs>
+          <rect x="2" y="2" width="36" height="36" rx="10" fill="url(#g)" />
+          <g transform="translate(8,8)" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+          </g>
+        </svg>
+        LinkNeox <small>Gaming</small>
+      </a>
+      <a class="back" href="/">← linkneox.com</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <span class="tag">🎮 Gratis · Sin descargas · Sin registro</span>
+      <h1>Juegos para jugar <span>en el navegador</span></h1>
+      <p>Abre el juego y a jugar: funcionan en el ordenador sin instalar nada. La partida se guarda sola en tu navegador.</p>
+    </section>
+
+    <section class="games wrap" aria-label="Juegos">
+      <article class="game">
+        <div class="shot">
+          <img src="img/sobreviviendo-castillo.jpg" width="800" height="450" alt="Un personaje frente al castillo morado del ogro en la Isla Misteriosa" />
+          <img class="mini" src="img/sobreviviendo-avion.jpg" width="800" height="450" alt="El piloto ogro dentro del avión antes del accidente" loading="lazy" />
+        </div>
+        <div class="body">
+          <span class="kind">Aventura y supervivencia 3D</span>
+          <h2>🏝️ Sobreviviendo a la Isla</h2>
+          <p>El avión se ha estrellado en mitad del océano… ¡y el piloto era un ogro! Crea tu personaje, sobrevive, construye tu base, navega entre islas, bucea en barcos hundidos y vence a los jefes para conseguir los 5 trozos del mapa que llevan hasta el ogro.</p>
+          <ul class="chips">
+            <li>💻 Ordenador</li><li>📱 Tablet</li><li>🎮 Mando</li><li>🇪🇸 Español</li>
+          </ul>
+          <a class="play" href="sobreviviendo-a-la-isla/">▶ Jugar ahora</a>
+        </div>
+      </article>
+
+      <article class="game">
+        <div class="shot">
+          <img class="top" src="img/eras-de-imperio.jpg" width="630" height="500" alt="Portada de Eras de Imperio: aldeas de la Edad de Piedra, la Antigüedad y la Edad Media con sus soldados" loading="lazy" />
+        </div>
+        <div class="body">
+          <span class="kind">Estrategia en tiempo real</span>
+          <h2>🏰 Eras de Imperio</h2>
+          <p>Levanta tu imperio desde la Edad de Piedra hasta la Edad Media: recoge comida, madera, piedra y oro, construye, avanza de época y forma tu ejército para derrotar al rival en partidas cortas.</p>
+          <ul class="chips">
+            <li>💻 Ordenador con ratón</li><li>⚔️ Contra el ordenador</li><li>🇪🇸 Español</li>
+          </ul>
+          <a class="play" href="eras-de-imperio/">▶ Jugar ahora</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="info wrap" aria-label="Información">
+      <div><b>💾 Se guarda solo</b><span>Tu partida queda en este navegador. Si borras los datos del navegador, se borra también.</span></div>
+      <div><b>🔒 Sin cuentas</b><span>No pedimos nombre, correo ni nada. Solo entras y juegas.</span></div>
+      <div><b>⚡ Va mejor en ordenador</b><span>Usa Chrome, Edge o Firefox actualizados. En pantalla completa se juega mejor.</span></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© LinkNeox · Juegos hechos con mucho cariño (y alguna idea de un aventurero de 8 años).</span>
+      <span><a href="/privacidad">Privacidad</a> · <a href="/contacto">Contacto</a></span>
+    </div>
+  </footer>
+</body>
+</html>

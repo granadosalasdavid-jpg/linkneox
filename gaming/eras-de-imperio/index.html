@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eras de Imperio</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M3 14V6l5-4 5 4v8z' fill='%23c9a04a'/><path d='M8 2v12' stroke='%232f6fdf' stroke-width='2'/></svg>">
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <div id="arriba">
+    <div id="recursos"></div>
+    <div id="controles">
+      <button data-vel="1">x1</button><button data-vel="2">x2</button><button data-vel="4">x4</button>
+      <button id="pausa">⏸ Pausa</button>
+      <button id="btn-sonido" title="Efectos de sonido">🔊</button>
+      <button id="btn-musica" title="Música">🎵</button>
+    </div>
+  </div>
+
+  <canvas id="juego"></canvas>
+  <div id="mensajes"></div>
+  <div id="aviso-pausa" hidden>PAUSA</div>
+
+  <div id="abajo">
+    <div id="info"></div>
+    <div id="centro-panel">
+      <div id="acciones"></div>
+      <div id="cola"></div>
+    </div>
+    <canvas id="minimapa" width="220" height="110"></canvas>
+  </div>
+
+  <div id="portada" class="capa">
+    <div class="tarjeta">
+      <h1>Eras de Imperio</h1>
+      <p class="sub">Prototipo · De la Edad de Piedra a la Edad Media</p>
+      <p>Recolecta comida, madera, piedra y oro, levanta tu poblado, avanza de época y destruye todos los edificios y unidades del rival.</p>
+      <ul>
+        <li><b>Clic izquierdo</b> o <b>recuadro</b>: elegir unidades.</li>
+        <li><b>Clic derecho</b>: mover, recolectar, construir o atacar.</li>
+        <li><b>WASD / flechas / bordes</b>: mover la cámara. <b>Rueda</b>: zoom.</li>
+        <li><b>H</b>: centro urbano · <b>.</b>: aldeano ocioso · <b>P</b>: pausa.</li>
+      </ul>
+      <div class="opciones">
+        <label>Dificultad de la IA
+          <select id="dificultad">
+            <option value="facil">Fácil</option>
+            <option value="normal" selected>Normal</option>
+            <option value="dificil">Difícil</option>
+          </select>
+        </label>
+        <label>Tamaño del mapa
+          <select id="op-tamano">
+            <option value="pequeno" selected>Pequeño (48 × 48)</option>
+            <option value="mediano">Mediano (96 × 96)</option>
+            <option value="grande">Grande (144 × 144)</option>
+          </select>
+        </label>
+        <label>Mapa
+          <select id="op-mapa">
+            <option value="clasico" selected>Clásico (siempre el mismo)</option>
+            <option value="aleatorio">Aleatorio</option>
+          </select>
+        </label>
+        <label>Relieve
+          <select id="op-relieve">
+            <option value="rios" selected>Ríos y montañas</option>
+            <option value="montanas">Solo montañas</option>
+            <option value="llano">Llano</option>
+          </select>
+        </label>
+        <label>Recursos iniciales
+          <select id="op-recursos">
+            <option value="normales" selected>Normales</option>
+            <option value="altos">Altos</option>
+            <option value="muyAltos">Muy altos</option>
+          </select>
+        </label>
+        <label>Niebla de guerra
+          <select id="op-niebla">
+            <option value="1" selected>Sí</option>
+            <option value="0">No (se ve todo el mapa)</option>
+          </select>
+        </label>
+      </div>
+      <button id="jugar" class="grande">Jugar</button>
+    </div>
+  </div>
+
+  <div id="final" class="capa" hidden>
+    <div class="tarjeta">
+      <h1 id="final-titulo"></h1>
+      <p id="final-texto"></p>
+      <button id="otra" class="grande">Jugar otra vez</button>
+    </div>
+  </div>
+
+  <!-- Orden de carga: datos, simulación e IA (lógica), luego gráficos e interfaz.
+       El "?v=" evita que el navegador use copias viejas al pulsar F5. -->
+  <script>
+    window.VERSION_CARGA = Date.now();
+    ['src/datos.js', 'src/simulacion.js', 'src/vision.js', 'src/ia.js', 'sprites/sprites.js', 'src/graficos.js',
+     'sonidos/sonidos.js', 'src/sonido.js', 'src/niebla.js', 'src/render.js', 'src/interfaz.js', 'src/principal.js']
+      .forEach(f => document.write('<script src="' + f + '?v=' + window.VERSION_CARGA + '"><\/script>'));
+  </script>
+</body>
+</html>
