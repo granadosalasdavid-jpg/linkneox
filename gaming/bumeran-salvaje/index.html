@@ -14,12 +14,15 @@
 <style>
   :root { --bg:#0b0618; --fg:#f5e9ff; --line:#5b4691; --btn:#2a1d47; --gold:#ffcc33; }
   html,body { margin:0; background:var(--bg); color:var(--fg); font-family:'VT323', monospace; }
-  body { display:flex; flex-direction:column; align-items:center; justify-content:center;
+  #app { display:flex; flex-direction:column; align-items:center; justify-content:center;
          min-height:100vh; gap:12px; padding:12px; box-sizing:border-box; }
   #wrap { position:relative; width:min(100%, calc((100vh - 150px) * 16 / 9)); min-width:280px; }
   canvas#game { width:100%; aspect-ratio:16/9; image-rendering:pixelated; display:block;
            border:4px solid #3a2a5c; box-sizing:border-box; background:#000; touch-action:manipulation; }
   #controls { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+  #controls .gl, #controls .gr, #controls .mini { display:contents; }
+  #angDown { order:1; } #angUp { order:2; } #powDown { order:3; } #powUp { order:4; }
+  #throw { order:5; } #mute { order:6; } #music { order:7; } #menu { order:8; }
   button { font-family:inherit; font-size:19px; background:var(--btn); color:var(--fg);
            border:3px solid var(--line); padding:6px 10px; cursor:pointer; user-select:none; }
   button:active { transform:translateY(2px); }
@@ -60,11 +63,58 @@
   .ach.on { border-color:var(--gold); }
   .ach .t { color:var(--gold); } .ach:not(.on) .t { color:#8f7fb0; }
   .ach .d { font-size:15px; opacity:.8; } .ach .by { font-size:15px; color:#7dffb0; }
+
+  /* ----- Móvil: siempre en horizontal (si está en vertical, se gira el juego) ----- */
+  html.mob, html.mob body { height:100%; overflow:hidden; overscroll-behavior:none; }
+  html.mob #app { position:fixed; left:0; top:0; width:var(--aw); height:var(--ah); min-height:0; padding:6px;
+                  display:grid; grid-template-columns:1fr auto 1fr; grid-template-rows:100%; gap:6px; align-items:center; }
+  html.mob.rot #app { transform-origin:0 0; transform:translateX(var(--ah)) rotate(90deg); }
+  html.mob #wrap { grid-column:2; grid-row:1; min-width:0;
+                   width:min(calc(var(--aw) - 216px), calc((var(--ah) - 12px) * 16 / 9)); }
+  html.mob #controls { display:contents; }
+  html.mob #controls .gl, html.mob #controls .gr { display:flex; flex-direction:column; justify-content:center; gap:6px; grid-row:1; min-width:0; }
+  html.mob #controls .gl { grid-column:1; } html.mob #controls .gr { grid-column:3; }
+  html.mob #controls button { order:0; }
+  html.mob #controls .mini { display:flex; flex-direction:column; gap:4px; margin-top:6px; }
+  html.mob #controls button { font-size:19px; padding:12px 4px; touch-action:manipulation; }
+  html.mob #controls .mini button { font-size:14px; padding:5px 2px; }
+  html.mob #throw { font-size:22px; padding:20px 4px; }
+  html.mob .help { display:none; }
+  html.mob #setup { gap:6px; padding:8px; }
+  html.mob #setup h1 { font-size:30px; }
+  html.mob #prows { grid-template-columns:repeat(2, minmax(0, 1fr)); width:100%; max-width:720px; }
+  html.mob .row button { padding:5px 8px; line-height:1; }
+  html.mob .row button small, html.mob #setup > .sub, html.mob .prow .lab { display:none; }
+  html.mob .row { gap:5px; }
+  html.mob .prow { padding:4px; gap:6px; }
+  html.mob .prow canvas { width:30px; height:35px; }
+  html.mob .prow .col { flex-direction:row; align-items:center; gap:4px; }
+  html.mob .prow input { font-size:17px; padding:4px; min-width:0; }
+  html.mob .prow .btns { flex-shrink:0; gap:4px; }
+  html.mob .prow .btns button { font-size:14px; padding:5px; }
+  html.mob #play { font-size:22px; padding:8px 22px; }
 </style>
 </head>
 <body>
+<div id="app">
 <div id="wrap"><canvas id="game"></canvas></div>
 
+<div id="controls">
+  <div class="gl">
+    <button id="angUp">ÁNGULO +</button>
+    <button id="angDown">ÁNGULO −</button>
+    <div class="mini">
+      <button id="mute">SONIDO: SÍ</button>
+      <button id="music">MÚSICA: SÍ</button>
+      <button id="menu">MENÚ</button>
+    </div>
+  </div>
+  <div class="gr">
+    <button id="powUp">FUERZA +</button>
+    <button id="powDown">FUERZA −</button>
+    <button id="throw">¡LANZAR!</button>
+  </div>
+</div>
 <div id="setup">
   <h1><span class="a">BUMERÁN</span> <span class="b">SALVAJE</span></h1>
   <div class="row" id="modeRow">
@@ -103,22 +153,38 @@
   <button id="achClose">VOLVER</button>
 </div>
 
-<div id="controls">
-  <button id="angDown">ÁNGULO −</button>
-  <button id="angUp">ÁNGULO +</button>
-  <button id="powDown">FUERZA −</button>
-  <button id="powUp">FUERZA +</button>
-  <button id="throw">¡LANZAR!</button>
-  <button id="mute">SONIDO: SÍ</button>
-  <button id="music">MÚSICA: SÍ</button>
-  <button id="menu">MENÚ</button>
-</div>
 <div class="help">↑ ↓ Ángulo · ← → Fuerza · Mayús = de 5 en 5 · Espacio / Enter = Lanzar · M = Sonido · N = Música · Esc = Menú</div>
+</div>
 
 <script>
 (() => {
 'use strict';
 const $ = id => document.getElementById(id);
+
+// ---------- Móvil en horizontal ----------
+function layoutMobile() {
+  const root = document.documentElement, w = innerWidth, h = innerHeight;
+  const touch = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+  const mob = touch && Math.min(w, h) <= 600;
+  const rot = mob && h > w; // en vertical se gira todo el juego 90°
+  root.classList.toggle('mob', mob);
+  root.classList.toggle('rot', rot);
+  root.style.setProperty('--aw', (rot ? h : w) + 'px');
+  root.style.setProperty('--ah', (rot ? w : h) + 'px');
+}
+addEventListener('resize', layoutMobile);
+addEventListener('orientationchange', () => setTimeout(layoutMobile, 200));
+layoutMobile();
+// Al empezar a jugar: pantalla completa y bloqueo en horizontal (Android; en iPhone se queda el giro)
+function goLandscape() {
+  if (!document.documentElement.classList.contains('mob')) return;
+  try {
+    const el = document.documentElement;
+    const p = !document.fullscreenElement && el.requestFullscreen ? el.requestFullscreen({ navigationUI: 'hide' }) : Promise.resolve();
+    p.then(() => screen.orientation && screen.orientation.lock ? screen.orientation.lock('landscape') : null)
+     .catch(() => {}).finally(() => setTimeout(layoutMobile, 300));
+  } catch (e) {}
+}
 
 // =====================================================================
 // CONFIGURACIÓN
@@ -418,17 +484,44 @@ function solidAt(x, y) {
   x = x | 0; y = y | 0;
   if (x < 0 || x >= W || y < 0) return false;
   if (y >= H) return true;
-  return tdata[(y * W + x) * 4 + 3] > 0;
+  return tdata[(y * W + x) * 4 + 3] > 128;
 }
+// Rompe el terreno: el agujero que se ve es exactamente el que se atraviesa
 function carve(x, y, r) {
   tctx.save();
-  tctx.globalCompositeOperation = 'source-atop';
-  tctx.fillStyle = 'rgba(20,8,20,.6)';
-  tctx.beginPath(); tctx.arc(x, y, r + 3, 0, Math.PI * 2); tctx.fill();
+  tctx.globalCompositeOperation = 'source-atop'; // borde quemado fino y claro (no parece hueco)
+  tctx.fillStyle = 'rgba(25,10,25,.3)';
+  tctx.beginPath(); tctx.arc(x, y, r + 2, 0, Math.PI * 2); tctx.fill();
   tctx.globalCompositeOperation = 'destination-out';
+  tctx.fillStyle = '#000'; // opaco: borra del todo (antes quedaba medio transparente pero sólido)
   tctx.beginPath(); tctx.arc(x, y, r, 0, Math.PI * 2); tctx.fill();
   tctx.restore();
   refreshTerrain();
+  dropFloating();
+}
+// Los trozos que ya no tocan el suelo se derrumban y desaparecen
+function dropFloating() {
+  const N = W * H, d = tdata, seen = new Uint8Array(N), stack = new Int32Array(N);
+  let sp = 0;
+  for (let x = 0; x < W; x++) { const i = (H - 1) * W + x; if (d[i * 4 + 3] > 128) { seen[i] = 1; stack[sp++] = i; } }
+  while (sp) {
+    const i = stack[--sp], x = i % W;
+    if (x > 0 && !seen[i - 1] && d[(i - 1) * 4 + 3] > 128) { seen[i - 1] = 1; stack[sp++] = i - 1; }
+    if (x < W - 1 && !seen[i + 1] && d[(i + 1) * 4 + 3] > 128) { seen[i + 1] = 1; stack[sp++] = i + 1; }
+    if (i >= W && !seen[i - W] && d[(i - W) * 4 + 3] > 128) { seen[i - W] = 1; stack[sp++] = i - W; }
+    if (i + W < N && !seen[i + W] && d[(i + W) * 4 + 3] > 128) { seen[i + W] = 1; stack[sp++] = i + W; }
+  }
+  const img = tctx.getImageData(0, 0, W, H), a = img.data;
+  let removed = 0;
+  for (let i = 0; i < N; i++) {
+    if (seen[i] || a[i * 4 + 3] === 0) continue;
+    if (a[i * 4 + 3] > 128 && removed % 5 === 0 && particles.length < 500) {
+      particles.push({ x: i % W, y: (i / W) | 0, vx: rand(-25, 25), vy: rand(-20, 10), life: rand(0.5, 1.1),
+        c: 'rgb(' + a[i * 4] + ',' + a[i * 4 + 1] + ',' + a[i * 4 + 2] + ')' });
+    }
+    a[i * 4 + 3] = 0; removed++;
+  }
+  if (removed) { tctx.putImageData(img, 0, 0); refreshTerrain(); }
 }
 
 // =====================================================================
@@ -1267,6 +1360,7 @@ $('achClose').addEventListener('click', () => $('achPanel').classList.add('hidde
 $('play').addEventListener('click', () => { audio(); beginFromMenu(); });
 
 function beginFromMenu() {
+  goLandscape();
   level = settings.level;
   const roster = [];
   for (let i = 0; i < playerCount(); i++) {
@@ -1384,6 +1478,7 @@ window.__game = {
   get state() { return state; }, get wind() { return wind; }, get turn() { return turn; },
   get tour() { return tour; }, get crate() { return crate; }, set crate(v) { crate = v; },
   get zoom() { return zoom; }, get scene() { return sceneKey; },
+  carve, solidAt,
   step(n) { for (let i = 0; i < n; i++) tick(1 / 60); draw(); },
 };
 })();
