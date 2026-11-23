@@ -10,22 +10,22 @@
 <meta property="og:description" content="Ángulo, fuerza y viento. 2 jugadores, contra la máquina o torneo. Gratis en el navegador.">
 <meta property="og:image" content="https://linkneox.com/gaming/img/bumeran-salvaje-portada.jpg">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 <style>
   :root { --bg:#0b0618; --fg:#f5e9ff; --line:#5b4691; --btn:#2a1d47; --gold:#ffcc33; }
-  html,body { margin:0; background:var(--bg); color:var(--fg); font-family:'Press Start 2P', monospace; }
+  html,body { margin:0; background:var(--bg); color:var(--fg); font-family:'VT323', monospace; }
   body { display:flex; flex-direction:column; align-items:center; justify-content:center;
          min-height:100vh; gap:12px; padding:12px; box-sizing:border-box; }
   #wrap { position:relative; width:min(100%, calc((100vh - 150px) * 16 / 9)); min-width:280px; }
   canvas#game { width:100%; aspect-ratio:16/9; image-rendering:pixelated; display:block;
            border:4px solid #3a2a5c; box-sizing:border-box; background:#000; touch-action:manipulation; }
   #controls { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
-  button { font-family:inherit; font-size:10px; background:var(--btn); color:var(--fg);
-           border:3px solid var(--line); padding:9px 10px; cursor:pointer; user-select:none; }
+  button { font-family:inherit; font-size:19px; background:var(--btn); color:var(--fg);
+           border:3px solid var(--line); padding:6px 10px; cursor:pointer; user-select:none; }
   button:active { transform:translateY(2px); }
   button:disabled { opacity:.4; cursor:default; }
   #throw { background:#7a2350; border-color:#ff5c8a; }
-  .help { font-size:8px; opacity:.7; text-align:center; line-height:2; }
+  .help { font-size:15px; opacity:.7; text-align:center; line-height:2; }
 
   /* ----- Menú inicial ----- */
   #setup { position:fixed; inset:0; z-index:5; display:flex; flex-direction:column; align-items:center;
@@ -33,33 +33,33 @@
   #setup.hidden { display:none; }
   #setup > * { flex-shrink:0; }
   #setup > :first-child { margin-top:auto; } #setup > :last-child { margin-bottom:auto; }
-  #setup h1 { margin:0; font-size:clamp(18px, 4vw, 34px); line-height:1.3; font-weight:normal; }
+  #setup h1 { margin:0; font-size:clamp(32px, 6.5vw, 58px); line-height:1.3; font-weight:normal; }
   #setup h1 .a { color:#ff9f1c; } #setup h1 .b { color:#ff5c8a; }
-  .sub { font-size:9px; color:#cdbcff; }
+  .sub { font-size:17px; color:#cdbcff; }
   .row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; align-items:center; }
-  .row button { font-size:9px; line-height:1.7; }
-  .row button small { display:block; font-size:7px; opacity:.75; }
+  .row button { font-size:18px; line-height:1.1; }
+  .row button small { display:block; font-size:14px; opacity:.75; }
   .row button.sel { background:#5b4691; border-color:var(--gold); color:var(--gold); }
   #prows { display:grid; grid-template-columns:repeat(2, minmax(0, 340px)); gap:10px; }
   @media (max-width:720px) { #prows { grid-template-columns:minmax(0, 340px); } }
   .prow { display:flex; align-items:center; gap:8px; padding:8px; border:3px solid; background:#120726; }
   .prow canvas { width:48px; height:56px; image-rendering:pixelated; flex-shrink:0; cursor:pointer; }
   .prow .col { display:flex; flex-direction:column; gap:6px; min-width:0; flex:1; text-align:left; }
-  .prow .lab { font-size:8px; }
-  .prow input { font-family:inherit; font-size:11px; width:100%; box-sizing:border-box; padding:7px;
+  .prow .lab { font-size:16px; }
+  .prow input { font-family:inherit; font-size:20px; width:100%; box-sizing:border-box; padding:7px;
                 background:#0b0618; color:#fff; border:2px solid #3a2a5c; text-transform:uppercase; outline:none; }
   .prow input:disabled { color:#9a8fb5; }
   .prow .btns { display:flex; gap:6px; }
-  .prow .btns button { font-size:8px; padding:6px; flex:1; }
-  #play { font-size:13px; background:#7a2350; border-color:#ff5c8a; padding:13px 22px; }
+  .prow .btns button { font-size:16px; padding:4px 6px; flex:1; }
+  #play { font-size:26px; background:#7a2350; border-color:#ff5c8a; padding:13px 22px; }
   #achPanel { position:fixed; inset:0; z-index:6; background:rgba(10,4,24,.95); display:flex; flex-direction:column;
               align-items:center; gap:12px; overflow:auto; padding:20px 12px; box-sizing:border-box; }
   #achPanel.hidden { display:none; }
   #achList { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:8px; width:min(100%, 820px); }
-  .ach { border:3px solid #3a2a5c; padding:10px; text-align:left; font-size:9px; line-height:1.7; background:#120726; }
+  .ach { border:3px solid #3a2a5c; padding:10px; text-align:left; font-size:18px; line-height:1.2; background:#120726; }
   .ach.on { border-color:var(--gold); }
   .ach .t { color:var(--gold); } .ach:not(.on) .t { color:#8f7fb0; }
-  .ach .d { font-size:7px; opacity:.8; } .ach .by { font-size:7px; color:#7dffb0; }
+  .ach .d { font-size:15px; opacity:.8; } .ach .by { font-size:15px; color:#7dffb0; }
 </style>
 </head>
 <body>
@@ -98,7 +98,7 @@
 </div>
 
 <div id="achPanel" class="hidden">
-  <h2 style="margin:0;font-size:16px;color:var(--gold);font-weight:normal">LOGROS</h2>
+  <h2 style="margin:0;font-size:30px;color:var(--gold);font-weight:normal">LOGROS</h2>
   <div id="achList"></div>
   <button id="achClose">VOLVER</button>
 </div>
@@ -869,8 +869,9 @@ function updateProjs(dt) {
 // DIBUJO
 // =====================================================================
 function T(s, x, y, c = '#fff', size = 8, align = 'left') {
-  ctx.font = size + "px 'Press Start 2P', monospace";
+  ctx.font = (size * 2) + "px 'VT323', monospace"; // VT323 al doble: mismo ancho por letra (size px)
   ctx.textAlign = align; ctx.textBaseline = 'top';
+  y -= Math.round(size * 0.3);
   ctx.fillStyle = '#000'; ctx.fillText(s, x + 1, y + 1);
   ctx.fillStyle = c; ctx.fillText(s, x, y);
 }
@@ -1028,36 +1029,36 @@ function drawHUD() {
     const p = players[i], left = i === 0;
     const x = left ? 6 : W - 6, al = left ? 'left' : 'right';
     const active = state === 'aim' && turn === i;
-    T(p.name, x, 6, p.color, 8, al);
-    for (let k = 0; k < LIVES; k++) drawHeart(left ? x + k * 9 : x - 7 - k * 9, 17, k < p.lives);
+    T(p.name, x, 4, p.color, 8, al);
+    for (let k = 0; k < LIVES; k++) drawHeart(left ? x + k * 9 : x - 7 - k * 9, 18, k < p.lives);
     let ix = left ? x + 29 : x - 38;
-    if (p.item) { drawItemIcon(ix, 16, p.item); ix += left ? 11 : -11; }
-    if (p.shield) drawItemIcon(ix, 16, 'shield');
+    if (p.item) { drawItemIcon(ix, 17, p.item); ix += left ? 11 : -11; }
+    if (p.shield) drawItemIcon(ix, 17, 'shield');
     const c = active ? '#ffffff' : '#8f7fb0';
-    T('ÁNGULO ' + p.angle + '°', x, 28, c, 8, al);
-    T('FUERZA ' + p.power, x, 39, c, 8, al);
+    T('ÁNGULO ' + p.angle + '°', x, 31, c, 8, al);
+    T('FUERZA ' + p.power, x, 43, c, 8, al);
     if (active && !p.cpu && settings.timerOn) {
       const s = Math.max(0, Math.ceil(turnT));
-      T('TIEMPO ' + s, x, 50, s <= 5 ? ((time * 4 | 0) % 2 ? '#ff5c5c' : '#ffffff') : '#7dffb0', 8, al);
+      T('TIEMPO ' + s, x, 55, s <= 5 ? ((time * 4 | 0) % 2 ? '#ff5c5c' : '#ffffff') : '#7dffb0', 8, al);
     }
   }
   drawWind();
   const label = LEVELS[level].name + ' · ' + SCENES[sceneKey].name;
   const w = label.length * 8 + 10;
-  R(W / 2 - w / 2, H - 14, w, 13, 'rgba(10,4,24,.85)');
-  T(label, W / 2, H - 11, LEVELS[level].color, 8, 'center');
+  R(W / 2 - w / 2, H - 16, w, 15, 'rgba(10,4,24,.85)');
+  T(label, W / 2, H - 13, LEVELS[level].color, 8, 'center');
 }
 
 function drawToast() {
   const t = toasts[0];
   if (!t) return;
   const w = Math.max(t.t.length, 20) * 8 + 20, x = W / 2 - w / 2;
-  const y = ['gameover', 'bracket', 'champion'].includes(state) ? 164 : 60;
-  R(x, y, w, 34, 'rgba(10,4,24,.92)');
-  R(x, y, w, 2, '#ffcc33'); R(x, y + 32, w, 2, '#ffcc33'); R(x, y, 2, 34, '#ffcc33'); R(x + w - 2, y, 2, 34, '#ffcc33');
+  const y = ['gameover', 'bracket', 'champion'].includes(state) ? 158 : 60;
+  R(x, y, w, 44, 'rgba(10,4,24,.92)');
+  R(x, y, w, 2, '#ffcc33'); R(x, y + 42, w, 2, '#ffcc33'); R(x, y, 2, 44, '#ffcc33'); R(x + w - 2, y, 2, 44, '#ffcc33');
   T('★ LOGRO DESBLOQUEADO ★', W / 2, y + 5, '#ffcc33', 8, 'center');
-  T(t.t, W / 2, y + 15, '#ffffff', 8, 'center');
-  T(t.by, W / 2, y + 25, '#7dffb0', 8, 'center');
+  T(t.t, W / 2, y + 18, '#ffffff', 8, 'center');
+  T(t.by, W / 2, y + 30, '#7dffb0', 8, 'center');
 }
 
 function draw() {
@@ -1118,9 +1119,9 @@ function draw() {
 function drawGameOver() {
   R(0, 0, W, H, 'rgba(10,4,24,.86)');
   const wp = players[winner], p0 = players[0], p1 = players[1];
-  T('¡GANA ' + wp.name + '!', W / 2, 16, wp.color, 16, 'center');
-  if (tour) T('TORNEO · ' + tour.matches[tour.cur].l, W / 2, 40, '#cdbcff', 8, 'center');
-  else T('MARCADOR: ' + p0.name + ' ' + (sessionWins[p0.name] || 0) + ' - ' + (sessionWins[p1.name] || 0) + ' ' + p1.name, W / 2, 40, '#ffcc33', 8, 'center');
+  T('¡GANA ' + wp.name + '!', W / 2, 12, wp.color, 16, 'center');
+  if (tour) T('TORNEO · ' + tour.matches[tour.cur].l, W / 2, 44, '#cdbcff', 8, 'center');
+  else T('MARCADOR: ' + p0.name + ' ' + (sessionWins[p0.name] || 0) + ' - ' + (sessionWins[p1.name] || 0) + ' ' + p1.name, W / 2, 44, '#ffcc33', 8, 'center');
   const rows = [
     ['LANZAMIENTOS', s => s.shots],
     ['IMPACTOS', s => s.hits],
@@ -1144,8 +1145,8 @@ function drawGameOver() {
 
 function drawBracket() {
   R(0, 0, W, H, 'rgba(10,4,24,.88)');
-  T('TORNEO', W / 2, 18, '#ffcc33', 16, 'center');
-  T(tour.roster.length + ' JUGADORES · ELIMINATORIAS', W / 2, 42, '#cdbcff', 8, 'center');
+  T('TORNEO', W / 2, 14, '#ffcc33', 16, 'center');
+  T(tour.roster.length + ' JUGADORES · ELIMINATORIAS', W / 2, 46, '#cdbcff', 8, 'center');
   tour.matches.forEach((m, k) => {
     const y = 70 + k * 34;
     const ai = typeof m.a === 'string' ? tour.matches[+m.a.slice(1)].w : m.a;
@@ -1166,8 +1167,8 @@ function drawChampion() {
   R(0, 0, W, H, 'rgba(10,4,24,.82)');
   const champ = tour.roster[tour.matches[tour.matches.length - 1].w];
   for (const q of confetti) R(Math.round(q.x), Math.round(q.y), 2, 2, q.c);
-  T('¡CAMPEÓN DEL TORNEO!', W / 2, 22, '#ffcc33', 16, 'center');
-  T(champ.name, W / 2, 48, champ.color, 16, 'center');
+  T('¡CAMPEÓN DEL TORNEO!', W / 2, 16, '#ffcc33', 16, 'center');
+  T(champ.name, W / 2, 46, champ.color, 16, 'center');
   ctx.save();
   ctx.translate(W / 2, 182); ctx.scale(4, 4);
   drawGorillaFig(0, 0, { color: champ.color, acc: 3, dir: 1, pose: 'cheer' });
